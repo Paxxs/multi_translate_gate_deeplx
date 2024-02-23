@@ -1,0 +1,8 @@
+POST http://localhost:3000/translate
+Content-Type: 'application/json'
+
+    {
+        "text": "hello world",
+        "source_lang": "EN",
+        "target_lang": "ZH"
+    }
