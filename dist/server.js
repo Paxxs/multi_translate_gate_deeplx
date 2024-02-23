@@ -7,32 +7,36 @@ const express_1 = __importDefault(require("express"));
 const axios_1 = __importDefault(require("axios"));
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
-let targetURLs = []; // 获取环境变量数据或默认值初始化目标URL数组
-const CACHE_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
+// let targetURLs: string[] = []; // 获取环境变量数据或默认值初始化目标URL数组
+let targetURLs = process.env.DEEPLX_URLS
+    ? process.env.DEEPLX_URLS.split(",")
+    : ["https://api.deeplx.org"]; // 获取环境变量数据或默认值初始化目标URL数组
+// const CACHE_UPDATE_INTERVAL = 1000 * 60 * 10; // 10 minutes
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true })); // 支持URL编码的请求体
-const updateTargetUrls = async () => {
-    const configUrls = process.env.TARGET_URLS || "";
-    console.log("Attempting to update target URLs from:", configUrls);
-    try {
-        if (configUrls) {
-            const response = await axios_1.default.get(configUrls);
-            // 确保响应数据是字符串且不为空
-            if (typeof response.data === "string" &&
-                response.data.trim().length > 0) {
-                targetURLs = response.data.split(",").map((url) => url.trim()); // 去除可能的空格
-                console.log("Updated target URLs:", targetURLs);
-            }
-            return;
-        }
-        targetURLs = ["https://api.deeplx.org"];
-    }
-    catch (err) {
-        console.error("Failed to update target URLs:", err);
-    }
-};
-updateTargetUrls(); // 初始化更新
-setInterval(updateTargetUrls, CACHE_UPDATE_INTERVAL); // 更新目标URL数组的定时器
+// const updateTargetUrls = async () => {
+//     const configUrls: string = process.env.TARGET_URLS || "";
+//     console.log("Attempting to update target URLs from:", configUrls);
+//     try {
+//         if (configUrls) {
+//             const response: AxiosResponse = await axios.get(configUrls);
+//             // 确保响应数据是字符串且不为空
+//             if (
+//                 typeof response.data === "string" &&
+//                 response.data.trim().length > 0
+//             ) {
+//                 targetURLs = response.data.split(",").map((url) => url.trim()); // 去除可能的空格
+//                 console.log("Updated target URLs:", targetURLs);
+//             }
+//             return;
+//         }
+//         targetURLs = ["https://api.deeplx.org"];
+//     } catch (err) {
+//         console.error("Failed to update target URLs:", err);
+//     }
+// };
+// updateTargetUrls(); // 初始化更新
+// setInterval(updateTargetUrls, CACHE_UPDATE_INTERVAL); // 更新目标URL数组的定时器
 app.all("*", async (req, res) => {
     console.log(req.method, req.path, req.body);
     const createRequestConfig = (targetURL) => ({
