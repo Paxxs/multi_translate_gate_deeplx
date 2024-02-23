@@ -1,0 +1,19 @@
+{
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/*.spec.ts"
+    ],
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "outDir": "./dist",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "strict": true,
+    }
+}
